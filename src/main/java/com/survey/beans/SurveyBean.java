@@ -6,7 +6,7 @@ import java.io.Serializable;
 public class SurveyBean implements Serializable {
     private static final long serialVersionUID = 10L;
 
-    // PropertyChangeSupport for Bound Properties (Unit 2 - JavaBeans)
+    
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     private String selectedSurveyTitle = "";
@@ -15,7 +15,7 @@ public class SurveyBean implements Serializable {
     private double satisfactionScore = 0.0;
     private boolean analysisDirty = false;
 
-    // ── Bound Property: selectedSurveyTitle ─────────────────────────────────
+    
     public String getSelectedSurveyTitle() { return selectedSurveyTitle; }
     public void setSelectedSurveyTitle(String newTitle) {
         String old = this.selectedSurveyTitle;
@@ -23,7 +23,7 @@ public class SurveyBean implements Serializable {
         pcs.firePropertyChange("selectedSurveyTitle", old, newTitle);
     }
 
-    // ── Bound Property: selectedSurveyId ────────────────────────────────────
+    
     public int getSelectedSurveyId() { return selectedSurveyId; }
     public void setSelectedSurveyId(int newId) {
         int old = this.selectedSurveyId;
@@ -32,7 +32,6 @@ public class SurveyBean implements Serializable {
         pcs.firePropertyChange("selectedSurveyId", old, newId);
     }
 
-    // ── Bound Property: responseCount ────────────────────────────────────────
     public int getResponseCount() { return responseCount; }
     public void setResponseCount(int count) {
         int old = this.responseCount;
@@ -40,7 +39,6 @@ public class SurveyBean implements Serializable {
         pcs.firePropertyChange("responseCount", old, count);
     }
 
-    // ── Bound Property: satisfactionScore ────────────────────────────────────
     public double getSatisfactionScore() { return satisfactionScore; }
     public void setSatisfactionScore(double score) {
         double old = this.satisfactionScore;
@@ -51,7 +49,6 @@ public class SurveyBean implements Serializable {
     public boolean isAnalysisDirty() { return analysisDirty; }
     public void setAnalysisDirty(boolean dirty) { this.analysisDirty = dirty; }
 
-    // ── PropertyChangeListener support (Unit 2 - Event Model) ────────────────
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
