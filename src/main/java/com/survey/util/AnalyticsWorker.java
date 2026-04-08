@@ -7,8 +7,9 @@ import java.util.concurrent.*;
 import java.util.logging.*;
 
 /**
- * AnalyticsWorker - Demonstrates: Multithreading, Thread Life Cycle (Unit 1)
- * Uses ExecutorService for background analytics computation.
+ * AnalyticsWorker
+ * Demonstrates multithreading using ExecutorService.
+ * Runs analytics computation in the background.
  */
 public class AnalyticsWorker implements Runnable {
     private static final Logger LOGGER = Logger.getLogger(AnalyticsWorker.class.getName());
@@ -22,7 +23,7 @@ public class AnalyticsWorker implements Runnable {
     private final ResponseDAO responseDAO;
     private final AnalyticsCallback callback;
 
-    // Thread pool (Unit 1 - Thread Life Cycle)
+    // Fixed thread pool for background tasks
     private static final ExecutorService executor = Executors.newFixedThreadPool(2);
 
     public AnalyticsWorker(int surveyId, AnalyticsCallback callback) {
@@ -34,9 +35,10 @@ public class AnalyticsWorker implements Runnable {
     @Override
     public void run() {
         try {
-            LOGGER.info("AnalyticsWorker started for survey " + surveyId + " on thread: " + Thread.currentThread().getName());
+            LOGGER.info("Starting analytics for survey ID: " + surveyId +
+                        " | Thread: " + Thread.currentThread().getName());
 
-            // Simulate compute time
+            // Simulating processing delay
             Thread.sleep(300);
 
             AnalyticsResult result = new AnalyticsResult();
@@ -47,32 +49,35 @@ public class AnalyticsWorker implements Runnable {
             result.choiceDistribution = responseDAO.getChoiceDistribution(surveyId);
             result.textResponses = responseDAO.getTextResponses(surveyId);
 
-            LOGGER.info("AnalyticsWorker completed for survey " + surveyId);
+            LOGGER.info("Analytics completed successfully for survey ID: " + surveyId);
             callback.onComplete(result);
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            LOGGER.log(Level.WARNING, "AnalyticsWorker interrupted", e);
+            LOGGER.log(Level.WARNING, "Analytics task interrupted for survey ID: " + surveyId, e);
             callback.onError(e);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "AnalyticsWorker error", e);
+            LOGGER.log(Level.SEVERE, "Error while processing analytics for survey ID: " + surveyId, e);
             callback.onError(e);
         }
     }
 
     /**
-     * Submit this worker to the thread pool (Unit 1 - Creating Multithreaded Programs)
+     * Submits the worker to the thread pool for execution
      */
     public static void submit(AnalyticsWorker worker) {
         executor.submit(worker);
     }
 
+    /**
+     * Gracefully shuts down the thread pool
+     */
     public static void shutdown() {
         executor.shutdown();
     }
 
     /**
-     * Inner class - encapsulates analytics result data
+     * Holds analytics result data
      */
     public static class AnalyticsResult {
         public int surveyId;
